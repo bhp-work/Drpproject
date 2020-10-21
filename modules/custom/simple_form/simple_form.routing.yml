@@ -1,0 +1,7 @@
+simple_form.simple_form:
+  path: 'simple-form'
+  defaults: 
+    _form: '\Drupal\simple_form\form\SimpleForm'
+    _title: 'Our Cool Form' 
+    requirements:
+      _permission: 'access content' 

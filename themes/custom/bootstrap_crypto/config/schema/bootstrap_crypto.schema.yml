@@ -1,0 +1,5 @@
+# Schema for the theme setting configuration file of the Bootstrap crypto cdn theme.
+
+bootstrap_crypto.settings:
+  type: theme_settings
+  label: 'Bootstrap Cryptoxbot settings'
