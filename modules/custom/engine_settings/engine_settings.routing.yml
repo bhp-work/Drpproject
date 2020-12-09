@@ -1,0 +1,7 @@
+engine_settings.manage_engine_settings:
+  path: '/manage-engine-settings'
+  defaults:
+    _controller: '\Drupal\engine_settings\Controller\eng_controller::show_engine_settings'
+    _title: 'Manage engine settings'
+  requirements: 
+    _permission: 'access content'

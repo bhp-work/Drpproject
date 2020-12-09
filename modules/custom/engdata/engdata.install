@@ -1,0 +1,61 @@
+<?php
+
+function engdata_schema() {
+  $schema['engdata'] = array(
+    'fields' => array(
+      'Eng_Config_ID'=>array(
+        'type'=>'serial',
+        'not null' => TRUE,
+      ),
+      
+      'User_ID'=>array(
+        'type'=>'int',
+        'not null' => TRUE,
+      ), 
+
+      'Eng_Config_Parent_ID'=>array(
+        'type'=>'int',
+        'not null' => TRUE,
+      ),
+
+      'Eng_Config_Process_Name'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ), 
+
+      'Eng_Config_Enabled'=>array(
+        'type' => 'int',
+        'size' => 'tiny',
+        'not null' => TRUE,
+        'default' => 1,
+      ),
+
+       'Eng_Config_Run_State'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'Eng_Config_Options'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+      'Eng_Config_Last_Status'=>array(
+        'type' => 'varchar',
+        'length' => 25,
+        'not null' => TRUE,
+      ),
+      'Eng_Config_Last_Update'=>array(
+        'type' => 'varchar',
+        'length' => 40,
+        'not null' => TRUE,
+      ),
+    
+    ),
+    'primary key' => array('Eng_Config_ID'),
+  );
+
+  return $schema;
+
+}

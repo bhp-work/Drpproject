@@ -1,0 +1,15 @@
+<?php
+/**
+ * Implements hook_theme().
+ */
+function engine_settings_theme($existing, $type, $theme, $path) {
+    return [
+      'my-template' => [
+        'variables' => ['data' => NULL, 'nid'=>NULL],
+      ],
+      'custom-block' => [
+        'variables' => ['data' => NULL],
+      ],
+
+    ];
+  }

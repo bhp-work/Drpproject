@@ -1,0 +1,35 @@
+<?php
+
+/**
+ * @file
+ * Contains engdata.module.
+ */
+
+use Drupal\Core\Routing\RouteMatchInterface;
+
+/**
+ * Implements hook_help().
+ */
+function engdata_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    // Main module help for the engdata module.
+    case 'help.page.engdata':
+      $output = '';
+      $output .= '<h3>' . t('About') . '</h3>';
+      $output .= '<p>' . t('This dispaly information what you enter your application.Configuration of eng_config database table') . '</p>';
+      return $output;
+
+    default:
+  }
+}
+
+function engdata_theme() {
+  // We use a template file to allow for translation of blocks of content.
+  // Therefore we need to add this content at the theming layer.
+  return [
+    'engdata_description' => [
+      'template' => 'description',
+      'variables' => [],
+    ],
+  ];
+}

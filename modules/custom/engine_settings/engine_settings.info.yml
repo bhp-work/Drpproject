@@ -1,0 +1,6 @@
+name: Manage Engine settings
+type: module
+description: 'This page enables user to modify the engine status.'
+package: Cxb_engine
+version: 8.x
+core: 8.x
