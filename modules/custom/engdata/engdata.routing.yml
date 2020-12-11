@@ -26,7 +26,7 @@ engdata.engdata_form:
   
 
 engdata.display_table_controller_display:
-  path: '/engdata/manage'
+  path: '/engdata'
   defaults:
     _controller: '\Drupal\engdata\Controller\DisplayTableController::display'
     _title: 'Engine config'
@@ -43,3 +43,21 @@ engdata.delete_form:
   requirements:
     _access: 'TRUE'
   
+
+
+    
+engdata.display_Pair_Connection_controller:
+  path: '/engdata/pairconn'
+  defaults:
+    _controller: '\Drupal\engdata\Controller\PairListController::display'
+    _title: 'Pair connection'
+  requirements:
+    _permission: 'access content'
+
+  #   engdata.engdata_pairconn_form:
+  # path: '/engdata/pairconn/form'
+  # defaults:
+  #   _form: '\Drupal\engdata\Form\pairconnform'
+  #   _title: 'pairconnform'
+  # requirements:
+  #   _access: 'TRUE'

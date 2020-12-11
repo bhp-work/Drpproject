@@ -86,7 +86,7 @@ $uid= $user->get('uid')->value;
     //display data in site
     $form['table'] = [
             '#type' => 'table',
-            '#prefix' => '<h4>Engine Configuration settings</h4> </hr> <a href="../engdata/form" class="btn btn-primary">Add new setting</a> </hr>',
+            '#prefix' => '<h4>Engine Configuration settings</h4> </hr> <a href="../engdata/form" class="btn btn-primary">Add new setting</a></hr>',
             '#header' => $header_table,
             '#rows' => $rows,
             '#empty' => t('No data found'),
