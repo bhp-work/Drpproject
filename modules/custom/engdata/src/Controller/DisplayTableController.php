@@ -35,7 +35,7 @@ class DisplayTableController extends ControllerBase {
    *   Return Hello string.
    */
   public function display() {
-    /**return [
+    /*return [
       '#type' => 'markup',
       '#markup' => $this->t('Implement method: display with parameter(s): $name'),
     ];*/
@@ -55,8 +55,11 @@ class DisplayTableController extends ControllerBase {
         'Edit' => t('Edit'),
     );
 
+    $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+$uid= $user->get('uid')->value;
 //select records from table
     $query = \Drupal::database()->select('eng_config', 'e');
+    $query->condition('User_ID',$uid);
        $query->fields('e', ['Eng_Config_ID', 'User_ID', 'Eng_Config_Parent_ID', 'Eng_Config_Process_Name', 'Eng_Config_Enabled', 'Eng_Config_Run_State', 'Eng_Config_Options', 'Eng_Config_Last_Status', 'Eng_Config_Last_Update']);
       $results = $query->execute()->fetchAll();
         $rows=array();
@@ -70,7 +73,7 @@ class DisplayTableController extends ControllerBase {
             'User ID' => $data->User_ID,
                 'Parent ID' => $data->Eng_Config_Parent_ID,
                 'Process Name' => $data->Eng_Config_Process_Name,
-                'Enabled' => $data->Eng_Config_Enabled,
+                'Enabled' => ($data->Eng_Config_Enabled=='1'?'Yes':'No'),
                 'Run State' => $data->Eng_Config_Run_State,
                 'Options' => $data->Eng_Config_Options,
                 'Last Status' => $data->Eng_Config_Last_Status,
@@ -83,9 +86,14 @@ class DisplayTableController extends ControllerBase {
     //display data in site
     $form['table'] = [
             '#type' => 'table',
+            '#prefix' => '<h4>Engine Configuration settings</h4> </hr> <a href="../engdata/form" class="btn btn-primary">Add new setting</a> </hr>',
             '#header' => $header_table,
             '#rows' => $rows,
             '#empty' => t('No data found'),
+        ];
+
+        $form['pager'] = [
+          '#type' => 'pager',
         ];
 //        echo '<pre>';print_r($form['table']);exit;
         return $form;

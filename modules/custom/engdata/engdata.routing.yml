@@ -1,11 +1,20 @@
 
-engdata.engdata_controller_display:
-  path: '/engdata'
-  defaults:
-    _controller: '\Drupal\engdata\Controller\engdataController::display'
-    _title: 'display'
-  requirements:
-    _permission: 'access content'
+# engdata.engdata_controller_display:
+#   path: '/engdata'
+#   defaults:
+#     _controller: '\Drupal\engdata\Controller\engdataController::display'
+#     _title: 'display'
+#   requirements:
+#     _permission: 'access content'
+
+
+# engdata.engdata_controller_display:
+#    path: '/engdata/form'
+#   defaults:
+#     _form: '\Drupal\engdata\Form\engdataForm'
+#     _title: 'Add new'
+#   requirements:
+#     _permission: 'access content'
 
 engdata.engdata_form:
   path: '/engdata/form'
@@ -20,7 +29,7 @@ engdata.display_table_controller_display:
   path: '/engdata/manage'
   defaults:
     _controller: '\Drupal\engdata\Controller\DisplayTableController::display'
-    _title: 'display'
+    _title: 'Engine config'
   requirements:
     _permission: 'access content'
 
@@ -30,7 +39,7 @@ engdata.delete_form:
   path: '/engdata/delete/{cid}'
   defaults:
     _form: '\Drupal\engdata\Form\DeleteForm'
-    _title: 'DeleteForm'
+    _title: 'Delete Form'
   requirements:
     _access: 'TRUE'
   

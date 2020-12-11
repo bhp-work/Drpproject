@@ -28,6 +28,17 @@ class engdataForm extends FormBase {
    */
   public function buildForm(array $form, FormStateInterface $form_state) {
 
+    $currtime = time(); // get the Unix timestamp of now
+   // $fortime = format_date( time(), 'Y-m-d H:i:s'); // using the user's timezone preferences
+    $fortime = date('Y-m-d H:i:s', $currtime);
+
+
+// Load the current user.
+$user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+$uid= $user->get('uid')->value;
+//  dump($user);
+//  exit;
+
     $conn = Database::getConnection();
      $record = array();
     if (isset($_GET['num'])) {
@@ -49,8 +60,8 @@ class engdataForm extends FormBase {
        $form['User_ID'] = array (
         '#type' => 'textfield',
         '#title' => t('User ID:'),
-      //  '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
-        '#default_value' => (isset($record['User_ID']) && $_GET['num']) ? $record['User_ID']:'',
+        '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
+        '#default_value' => (isset($record['User_ID']) && $_GET['num']) ? $record['User_ID']:$uid,
          );
     $form['Eng_Config_Parent_ID'] = array(
       '#type' => 'textfield',
@@ -68,6 +79,8 @@ class engdataForm extends FormBase {
       '#required' => TRUE,
       '#default_value' => (isset($record['Eng_Config_Process_Name']) && $_GET['num']) ? $record['Eng_Config_Process_Name']:'',
       );
+     // $default = 'Yes';
+
       $form['Eng_Config_Enabled'] = array (
         '#type' => 'select',
         '#title' => ('Enabled:'),
@@ -76,7 +89,8 @@ class engdataForm extends FormBase {
           '1' => t('Yes'),
           '0' => t('No'),
           
-          '#default_value' => (isset($record['Eng_Config_Enabled']) && $_GET['num']) ? $record['Eng_Config_Enabled']:'',
+       //   '#default_value' => (isset($record['Eng_Config_Enabled']) && $_GET['num']) ? $record['Eng_Config_Enabled']:'',
+       //  '#default_value' =>$default,
           ),
         ); 
         $form['Eng_Config_Run_State'] = array (
@@ -91,8 +105,8 @@ class engdataForm extends FormBase {
             'DieNow' => t('DieNow'),
              'Restart_ Auto' => t('Restart_Autotop'),
             'Restart_Pause ' => t('Restart_Pause'),       
-          //'#default_value'=>'DieNow'
-            '#default_value' => (isset($record['Eng_Config_Run_State']) && $_GET['num']) ? $record['Eng_Config_Run_State']:'',
+         // '#default_value'=>'DieNow'
+          //  '#default_value' => (isset($record['Eng_Config_Run_State']) && $_GET['num']) ? $record['Eng_Config_Run_State']:'',
             ),
           ); 
     
@@ -108,7 +122,8 @@ class engdataForm extends FormBase {
       '#title' => t('Last Status:'),
      
       '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
-      '#default_value' => (isset($record['Eng_Config_Last_Status']) && $_GET['num']) ? $record['Eng_Config_Last_Status']:'',
+     '#default_value' => (isset($record['Eng_Config_Last_Status']) && $_GET['num']) ? $record['Eng_Config_Last_Status']:'',
+    //'#default_value' => $currtime,
        );
 
    
@@ -118,7 +133,12 @@ class engdataForm extends FormBase {
       '#title' => t('Last Update'),
       '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
       '#default_value' => (isset($record['Eng_Config_Last_Update']) && $_GET['num']) ? $record['Eng_Config_Last_Update']:'',
+     // '#default_value' => $fortime,
        );
+       $form['hid_Last_Status'] = array(
+        '#type' => 'hidden',
+        '#default_value' =>  isset($record['Eng_Config_Run_State']) ? $record['Eng_Config_Run_State']:'',
+      );
 
     $form['submit'] = [
         '#type' => 'submit',
@@ -171,9 +191,14 @@ class engdataForm extends FormBase {
     $Eng_Config_Enabled=$field['Eng_Config_Enabled'];
     $Eng_Config_Run_State=$field['Eng_Config_Run_State'];
     $Eng_Config_Options=$field['Eng_Config_Options'];
-    $Eng_Config_Last_Status=$field['Eng_Config_Last_Status'];
+    //$Eng_Config_Last_Status=$field['Eng_Config_Last_Status'];
     $Eng_Config_Last_Update=$field['Eng_Config_Last_Update'];
-   
+    $currtime = time(); // get the Unix timestamp of now
+    $fortime = date('Y-m-d H:i:s', $currtime);
+    $Eng_Config_Last_Status=$field['hid_Last_Status'] ;
+//  dump($Eng_Config_Last_Status);
+//  exit;
+  //  $fortime = format_date( time(), 'large'); // using the user's timezone preferences
     /*$insert = array('name' => $name, 'mobilenumber' => $number, 'email' => $email, 'age' => $age, 'gender' => $gender, 'website' => $website);
     db_insert('engdata')
     ->fields($insert)
@@ -195,7 +220,7 @@ class engdataForm extends FormBase {
               'Eng_Config_Run_State' =>  $Eng_Config_Run_State,
               'Eng_Config_Options' => $Eng_Config_Options,
               'Eng_Config_Last_Status' => $Eng_Config_Last_Status,
-              'Eng_Config_Last_Update' => $Eng_Config_Last_Update,
+              'Eng_Config_Last_Update' => $fortime,
           );
           $query = \Drupal::database();
           $query->update('eng_config')
@@ -217,7 +242,7 @@ class engdataForm extends FormBase {
               'Eng_Config_Run_State' =>  $Eng_Config_Run_State,
               'Eng_Config_Options' => $Eng_Config_Options,
              // 'Eng_Config_Last_Status' => $Eng_Config_Last_Status,
-             // 'Eng_Config_Last_Update' => $Eng_Config_Last_Update,
+              'Eng_Config_Last_Update' => $fortime,
           );
            $query = \Drupal::database();
            $query ->insert('eng_config')
