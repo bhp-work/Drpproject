@@ -21,7 +21,7 @@ class PairListController extends ControllerBase {
     $build = [
       'description' => [
         '#theme' => 'engdata_description',
-        '#description' => 'Manage pair connection ',
+        '#description' => 'Manage exchange pair',
         '#attributes' => [],
       ],
     ];
@@ -80,7 +80,7 @@ $uid= $user->get('uid')->value;
     //display data in site
     $form['table'] = [
             '#type' => 'table',
-            '#prefix' => '<h4>User pair connections</h4> </hr> <a href="../engdata/pairconn/form" class="btn btn-primary">Add new pair connection</a></hr>',
+            '#prefix' => '<h4>Manage exchange pairs</h4> </hr> <a href="../engdata/pairconn/form" class="btn btn-primary">Add new pair</a></hr>',
             '#header' => $header_table,
             '#rows' => $rows,
             '#empty' => t('No data found'),

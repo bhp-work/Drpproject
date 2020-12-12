@@ -20,7 +20,7 @@ engdata.engdata_form:
   path: '/engdata/form'
   defaults:
     _form: '\Drupal\engdata\Form\engdataForm'
-    _title: 'engdataForm'
+    _title: 'Engine config'
   requirements:
     _access: 'TRUE'
   
@@ -57,7 +57,14 @@ engdata.display_Pair_Connection_controller:
   #   engdata.engdata_pairconn_form:
   # path: '/engdata/pairconn/form'
   # defaults:
-  #   _form: '\Drupal\engdata\Form\pairconnform'
+  #   _form: ''\Drupal\engdata\Form\pairconnform
   #   _title: 'pairconnform'
   # requirements:
   #   _access: 'TRUE'
+engdata.pairconn_form:
+  path: '/engdata/pairconn/form'
+  defaults:
+    _form: '\Drupal\engdata\Form\pairconnform'
+    _title: 'Exchange Pair config'
+  requirements:
+    _access: 'TRUE'

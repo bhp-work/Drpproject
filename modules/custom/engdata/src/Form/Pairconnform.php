@@ -69,11 +69,17 @@ $uid= $user->get('uid')->value;
       '#type' => 'textfield',
       '#title' => t('Exchange:'),
       '#required' => TRUE,
-      '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
+      //'#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
       '#default_value' => (isset($record['exchange']) && $_GET['num']) ? $record['exchange']:'',
       );
      // $default = 'Yes';
-
+     $form['pair'] = array(
+      '#type' => 'textfield',
+      '#title' => t('Pair:'),
+      '#required' => TRUE,
+     // '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
+      '#default_value' => (isset($record['pair']) && $_GET['num']) ? $record['pair']:'',
+      );
       $form['enabled'] = array (
         '#type' => 'select',
         '#title' => ('Enabled:'),
@@ -126,12 +132,24 @@ $uid= $user->get('uid')->value;
     $exchange=$field['exchange'];
     $pair=$field['pair'];
     $enabled=$field['enabled'];
-   
+
+    $currtime = time(); // get the Unix timestamp of now
+    $fortime = date('Y-m-d H:i:s', $currtime);
+
+// strip out all whitespace
+$exchange = preg_replace('/\s*/', '', $exchange);
+// convert the string to all lowercase
+$exchange = strtolower($exchange);
+// strip out all whitespace
+$pair = preg_replace('/\s*/', '', $pair);
+// convert the string to all uppercase
+$pair = strtoupper($pair);
 
    // connection_id, user_id, exchange, pair, enabled, last_updated
     if (isset($_GET['num'])) {
           $field  = array(
-              
+            'exchange'=>$exchange,            
+            'pair'   => $pair,
               'enabled' =>  $enabled,
                'last_updated' => $fortime,
           );
