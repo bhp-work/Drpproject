@@ -68,3 +68,20 @@ engdata.pairconn_form:
     _title: 'Exchange Pair config'
   requirements:
     _access: 'TRUE'
+
+engdata.connectionsform_form:
+  path: '/engdata/connections/form'
+  defaults:
+    _form: '\Drupal\engdata\Form\connectionsform'
+    _title: 'User pair connections config'
+  requirements:
+    _access: 'TRUE'
+
+ 
+engdata.exchangeapiform_form:
+  path: '/engdata/exchangeapi/form'
+  defaults:
+    _form: '\Drupal\engdata\Form\exchangeapiform'
+    _title: 'User exchange API config'
+  requirements:
+    _access: 'TRUE'

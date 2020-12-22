@@ -61,7 +61,8 @@ $uid= $user->get('uid')->value;
         '#type' => 'textfield',
         '#title' => t('User ID:'),
         '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
-        '#default_value' => (isset($record['user_id']) && $_GET['num']) ? $record['user_id']:$uid,
+       // '#default_value' => (isset($record['user_id']) && $_GET['num']) ? $record['user_id']:'Admin',
+       '#default_value' =>'Admin',
          );
  
 
@@ -128,7 +129,8 @@ $uid= $user->get('uid')->value;
     $field=$form_state->getValues();
     $connection_id=$field['connection_id'];
     //echo "$name";
-    $user_id=$field['user_id'];
+    $user_id=($field['user_id']=='Admin'?-1:$field['user_id']);
+    //$user_id=-1;
     $exchange=$field['exchange'];
     $pair=$field['pair'];
     $enabled=$field['enabled'];

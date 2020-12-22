@@ -43,7 +43,7 @@ class PairListController extends ControllerBase {
     //create table header
     $header_table = array(
      'connection_id'=>    t('Id'),
-      'User_ID' => t('User ID'),
+      'User_ID' => t('User'),
         'exchange' => t('Exchange'),
         'pair'=>t('Pair'),       
         'enabled' => t('Enabled'),
@@ -56,7 +56,7 @@ class PairListController extends ControllerBase {
 $uid= $user->get('uid')->value;
 //select records from table
     $query = \Drupal::database()->select('user_pair_connection', 'e');
-    $query->condition('user_id',$uid);
+    $query->condition('user_id',-1);
        $query->fields('e');
       $results = $query->execute()->fetchAll();
         $rows=array();
@@ -67,7 +67,7 @@ $uid= $user->get('uid')->value;
       //print the data from table
              $rows[] = array(
             'Id' =>$data->connection_id,
-            'User ID' => $data->user_id,
+            'User ID' => ($data->user_id==-1?'Admin':$data->user_id),
                 'Exchange' => $data->exchange,
                 'Pair' => $data->pair,
                 'Enabled' => ($data->enabled=='1'?'Yes':'No'),
