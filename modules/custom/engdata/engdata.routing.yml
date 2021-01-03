@@ -85,3 +85,20 @@ engdata.exchangeapiform_form:
     _title: 'User exchange API config'
   requirements:
     _access: 'TRUE'
+
+     
+engdata.default_form:
+  path: '/engdata/ajaxexample/form'
+  defaults:
+    _form: '\Drupal\engdata\Form\ajaxexample'
+    _title: 'ajax example'
+  requirements:
+    _access: 'TRUE'
+    
+engdata.masterexchange_form:
+  path: '/engdata/masterexchange'
+  defaults:
+    _form: '\Drupal\engdata\Form\masterExchangeForm'
+    _title: 'Manage Exchanges'
+  requirements:
+    _access: 'TRUE'

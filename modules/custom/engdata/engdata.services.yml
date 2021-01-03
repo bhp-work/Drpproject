@@ -1,0 +1,4 @@
+services: 
+  engdata.exchnagemanager:
+    class: Drupal\engdata\dbHelperService
+    arguments: ['@database']

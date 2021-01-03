@@ -5,6 +5,7 @@ namespace Drupal\engdata\Form;
 use Drupal\Core\Database\Database;
 use Drupal\Core\Form\FormBase;
 use Drupal\Core\Form\FormStateInterface;
+use Drupal\encrypt\Entity\EncryptionProfile;
 
 /**
  * Class exchangeapiform.
@@ -56,7 +57,7 @@ class exchangeapiform extends FormBase
         //display data in site
         $form['table'] = [
             '#type' => 'table',
-            '#prefix' => '<h4>Exchange API configs:</h4> </hr> ',
+            '#prefix' => '<h4>Exchange API config list:</h4> </hr> ',
             '#header' => $header_table,
             '#rows' => $rows,
             '#empty' => t('You have 0 exchange API config'),
@@ -65,12 +66,13 @@ class exchangeapiform extends FormBase
         $form['header_config'] = [
             '#type' => 'item',
             // '#title' => t('Configure exchange connections:'),
-            '#markup' => '<h4>Configure exchange API configuration:</h4> </hr>',
+            '#markup' => '<h4>Modify / Add exchange API Keys:</h4> </hr>',
         ];
 
         // Define a wrapper id to populate new content into.
         $ajax_wrapper = 'my-ajax-wrapper';
 
+        // $exch= \Drupal::service('engdata.exchnagemanager')->get_all_exchanges();
         // Sector.
         $form['exchange'] = [
             '#type' => 'select',
@@ -83,42 +85,52 @@ class exchangeapiform extends FormBase
                 'callback' => [$this, 'exchangeChange'],
                 'event' => 'change',
                 'wrapper' => $ajax_wrapper,
+                'progress' => [
+                    'type' => 'throbber',
+                    'message' => $this->t('fetching contents...'),
+                ],
             ],
+
         ];
 
         // Build a wrapper for the ajax response.
         $form['my_ajax_container'] = [
             '#type' => 'container',
             '#prefix' => '<div>',
-            '#suffix' => '</div></br>',
+            '#suffix' => '</div>',
             '#attributes' => [
                 'id' => $ajax_wrapper,
             ],
         ];
+        // $form['field_hdd_serial_no']['#prefix'] = '<div id="ajax_wrapper">';
+        // $form['field_hdd_serial_no']['#suffix'] = '</div>';
 
         // ONLY LOADED IN AJAX RESPONSE OR IF FORM STATE VALUES POPULATED.
         if (!empty($values) && !empty($values['exchange'])) {
             $options = _load_data($values['exchange']);
-            
+
             $form['my_ajax_container']['connection_name'] = array(
                 '#type' => 'textfield',
                 '#title' => t('Connection Name:'),
                 '#required' => true,
-                '#default_value' => (isset($options[0]->connection_name)) ? $options[0]->connection_name : '',
+                // '#default_value' => (isset($options[0]->connection_name)) ? $options[0]->connection_name : '',
             );
 
             $form['my_ajax_container']['api_key'] = array(
                 '#type' => 'textfield',
                 '#title' => t('Api Key'),
+                '#size' => '64',
+
                 //  '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
-                '#default_value' => (isset($options[0]->api_key)) ? $options[0]->api_key : '',
+                // '#default_value' => (isset($options[0]->api_key)) ? $options[0]->api_key : '',
 
             );
             $form['my_ajax_container']['api_s_key'] = array(
                 '#type' => 'textfield',
                 '#title' => t('Api Secret Key'),
+                '#size' => '64',
                 // '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
-                '#default_value' => (isset($options[0]->api_s_key)) ? $options[0]->api_s_key : '',
+                //    '#default_value' => (isset($options[0]->api_s_key)) ? $options[0]->api_s_key : '',
 
             );
 
@@ -126,7 +138,7 @@ class exchangeapiform extends FormBase
                 '#type' => 'hidden',
                 // '#title' => t('Api Secret Key'),
                 // '#attributes' => array('readonly' => 'readonly','disabled'=>'TRUE'),
-                '#default_value' => (isset($options[0]->user_ex_setting_id)) ? $options[0]->user_ex_setting_id : '',
+                //'#default_value' => (isset($options[0]->user_ex_setting_id)) ? $options[0]->user_ex_setting_id : '',
 
             );
 
@@ -148,17 +160,59 @@ class exchangeapiform extends FormBase
      */
     public function exchangeChange(array $form, FormStateInterface $form_state)
     {
-        // Return the element that will replace the wrapper (we return itself).
+        // // Return the element that will replace the wrapper (we return itself).
+        // if ($selectedValue = $form_state->getValue('exchange')) {
+        //     // Get the text of the selected option.
+        //     $selectedText = $form['exchange']['#options'][$selectedValue];
+
+        if ($selectedValue = $form_state->getValue('exchange')) {
+            $options = _load_data($selectedValue);
+
+            $form['my_ajax_container']['connection_name']['#value'] = $options[0]->connection_name;
+            $form['my_ajax_container']['api_key']['#value'] = $options[0]->api_key;
+            $form['my_ajax_container']['api_s_key']['#value'] = $options[0]->api_s_key;
+            $form['my_ajax_container']['user_ex_setting_id']['#value'] = $options[0]->user_ex_setting_id;
+        } else {
+
+            $form['my_ajax_container']['connection_name']['#value'] = 1;
+            $form['my_ajax_container']['api_key']['#value'] = 2;
+            $form['my_ajax_container']['api_s_key']['#value'] = 3;
+            $form['my_ajax_container']['user_ex_setting_id']['#value'] = 4;
+        }
         return $form['my_ajax_container'];
+
+        // $commands[] = ajax_command_replace('#ajax_wrapper', drupal_render($form['my_ajax_container']));
+        // return array('#type' => 'ajax','#commands' => $commands);
     }
 
     /**
      * {@inheritdoc}
      */
     public function validateForm(array &$form, FormStateInterface $form_state)
-    {
-
+    {$field = $form_state->getValues();
+        $api_key = "";
+        $api_s_key = "";
+        if (!empty($field)) {
+            $api_key = $field['api_key'];
+            $api_s_key = $field['api_s_key'];
+        }
         parent::validateForm($form, $form_state);
+        //    $name = $form_state->getValue('candidate_name');
+
+        if (strlen($api_key) != 64) {
+            $form_state->setErrorByName('api_key', $this->t('Please enter valid API key ' . strlen($api_key)));
+        }
+        if (!ctype_alnum($api_key)) {
+            $form_state->setErrorByName('api_key', $this->t('API key must not have space or alphanumeric characters'));
+        }
+
+        if (strlen($api_s_key) != 64) {
+            $form_state->setErrorByName('api_s_key', $this->t('Please enter valid API secret key' . strlen($api_s_key)));
+        }
+        if (!ctype_alnum($api_s_key)) {
+            $form_state->setErrorByName('api_s_key', $this->t('API secret key must not have space or alphanumeric characters'));
+        }
+
     }
 
     /**
@@ -167,7 +221,16 @@ class exchangeapiform extends FormBase
     public function submitForm(array &$form, FormStateInterface $form_state)
     {
 
-// Load the current user.
+        $string = "This is test api key!";
+        $encryptProfile = EncryptionProfile::load('encrypt-profile');
+        $encrypted = \Drupal::service('encryption')->encrypt($string, $encryptProfile);
+        //  echo $encrypted;
+        // $encrypted = \Drupal::service('encryption')->encrypt($string, $encryption_profile);
+        // $decrypted = \Drupal::service('encryption')->decrypt($encrypted, $encryption_profile);
+
+        // dsm($encrypted);
+        // dsm($decrypted);
+        // Load the current user.
         $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
         $uid = $user->get('uid')->value;
         $currtime = time(); // get the Unix timestamp of now
@@ -185,7 +248,7 @@ class exchangeapiform extends FormBase
         $currtime = time(); // get the Unix timestamp of now
         $fortime = date('Y-m-d H:i:s', $currtime);
 
-        if (isset($user_ex_setting_id)) {
+        if (!empty($user_ex_setting_id)) {
             $field = array(
                 'connection_name' => $connection_name,
                 'exchange' => $exchange,
