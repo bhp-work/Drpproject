@@ -66,7 +66,7 @@ class exchangeapiform extends FormBase
         $form['header_config'] = [
             '#type' => 'item',
             // '#title' => t('Configure exchange connections:'),
-            '#markup' => '<h4>Modify / Add exchange API Keys:</h4> </hr>',
+            '#markup' => '<h4>Add new exchange API Keys:</h4> </hr>',
         ];
 
         // Define a wrapper id to populate new content into.
@@ -80,7 +80,7 @@ class exchangeapiform extends FormBase
             '#required' => true,
             '#empty_option' => '- Select a value -',
             '#default_value' => (isset($values['exchange']) ? $values['exchange'] : ''),
-            '#options' => _load_exchanges(),
+            '#options' => _get_all_exchanges(),
             '#ajax' => [
                 'callback' => [$this, 'exchangeChange'],
                 'event' => 'change',
@@ -97,7 +97,7 @@ class exchangeapiform extends FormBase
         $form['my_ajax_container'] = [
             '#type' => 'container',
             '#prefix' => '<div>',
-            '#suffix' => '</div>',
+            '#suffix' => '</br></div>',
             '#attributes' => [
                 'id' => $ajax_wrapper,
             ],
@@ -141,7 +141,52 @@ class exchangeapiform extends FormBase
                 //'#default_value' => (isset($options[0]->user_ex_setting_id)) ? $options[0]->user_ex_setting_id : '',
 
             );
-
+            $form['my_ajax_container']['ticker_rate'] = array(
+                '#type' => 'select',
+                '#empty_value' => '',
+                '#title' => t('Ticker rate:'),
+                //'#required' => true,
+                '#empty_option' => '- Select a value -',
+                '#options' => array(
+                    'Highest bid' => t('Highest bid'),
+                    'Lowest ask' => t('Lowest ask')),
+                //   '#default_value' => (isset($values['ticker_rate']) ? $values['ticker_rate'] : ''),
+            );
+            // Base currency    dropdown
+            // Allowed coins    Checkboxe list
+            // Percentage by amount    text-numeric
+            // minimum currency amount per order    text-numeric
+            // maximum currency amount allocated    text-numeric
+            $form['my_ajax_container']['Per_by_amt'] = array(
+                //  '#type' => 'textfield',
+                '#title' => t('Percentage by amount:'),
+                '#type' => 'number',
+                '#min' => 0,
+                '#step' => 0.01,
+                //  '#required' => true,
+                // '#default_value' => (isset($options[0]->connection_name)) ? $options[0]->connection_name : '',
+                '#default_value' => '0.0',
+            );
+            $form['my_ajax_container']['min_cur_amt'] = array(
+                //   '#type' => 'textfield',
+                '#title' => t('minimum currency amount per order:'),
+                //  '#required' => true,
+                // '#default_value' => (isset($options[0]->connection_name)) ? $options[0]->connection_name : '',
+                '#default_value' => '0.0',
+                '#type' => 'number',
+                '#min' => 0,
+                '#step' => 0.01,
+            );
+            $form['my_ajax_container']['max_cur_amt'] = array(
+                //  '#type' => 'textfield',
+                '#title' => t('maximum currency amount allocated:'),
+                // '#required' => true,
+                // '#default_value' => (isset($options[0]->connection_name)) ? $options[0]->connection_name : '',
+                '#default_value' => '0.0',
+                '#type' => 'number',
+                '#min' => 0,
+                '#step' => 0.01,
+            );
         }
 
         $form['submit'] = [
@@ -248,23 +293,24 @@ class exchangeapiform extends FormBase
         $currtime = time(); // get the Unix timestamp of now
         $fortime = date('Y-m-d H:i:s', $currtime);
 
-        if (!empty($user_ex_setting_id)) {
-            $field = array(
-                'connection_name' => $connection_name,
-                'exchange' => $exchange,
-                'api_key' => $api_key,
-                'api_s_key' => $api_s_key,
-                'last_updated' => $fortime,
-            );
-            $query = \Drupal::database();
-            $query->update('user_ex_setting')
-                ->fields($field)
-                ->condition('user_ex_setting_id', $user_ex_setting_id)
-                ->execute();
-            drupal_set_message("succesfully updated");
-            //   $form_state->setRedirect('engdata.display_table_controller_display');
+        // if (!empty($user_ex_setting_id)) {
+        //     $field = array(
+        //         'connection_name' => $connection_name,
+        //         'exchange' => $exchange,
+        //         'api_key' => $api_key,
+        //         'api_s_key' => $api_s_key,
+        //         'last_updated' => $fortime,
+        //     );
+        //     $query = \Drupal::database();
+        //     $query->update('user_ex_setting')
+        //         ->fields($field)
+        //         ->condition('user_ex_setting_id', $user_ex_setting_id)
+        //         ->execute();
+        //     drupal_set_message("succesfully updated");
+        //     //   $form_state->setRedirect('engdata.display_table_controller_display');
 
-        } else {
+        // } else {
+
             $field = array(
                 'user_id' => $uid,
                 'connection_name' => $connection_name,
@@ -284,33 +330,33 @@ class exchangeapiform extends FormBase
             //  $response->send();
             //  $form_state->setRedirect('engdata.display_table_controller_display');
 
-        }
+        //}
     }
 
 }
-/**
- * Function for populating exchange
- */
-function _load_exchanges()
-{
-    $exchange = array('- Select exchange -');
-    $conn = Database::getConnection();
-    $results = array();
-    $query = $conn->select('user_pair_connection', 'e')
-        ->condition('user_id', -1)
-        ->condition('enabled', 1)
-        ->fields('e');
-    $results = $query->execute()->fetchAll();
+// /**
+//  * Function for populating exchange
+//  */
+// function _load_exchanges()
+// {
+//     $exchange = array('- Select exchange -');
+//     $conn = Database::getConnection();
+//     $results = array();
+//     $query = $conn->select('user_pair_connection', 'e')
+//         ->condition('user_id', -1)
+//         ->condition('enabled', 1)
+//         ->fields('e');
+//     $results = $query->execute()->fetchAll();
 
-    $exchanges = array();
+//     $exchanges = array();
 
-    foreach ($results as $h) {
-        $exchanges[$h->exchange] = $h->exchange;
-    }
-    $uniqueExchanges = array_unique($exchanges);
+//     foreach ($results as $h) {
+//         $exchanges[$h->exchange] = $h->exchange;
+//     }
+//     $uniqueExchanges = array_unique($exchanges);
 
-    return $uniqueExchanges;
-}
+//     return $uniqueExchanges;
+// }
 function _load_data($exchange)
 {
     // dump($exchange);
@@ -373,3 +419,41 @@ function _load_data($exchange)
 
 //   return $pair;
 // }
+
+
+    /**
+     * Function for populating exchange
+     */
+ function _get_all_exchanges()
+    {
+        //MasterExchID, MasterExchName, MasterExchActive, Timestamp, ApiEndpoint, PairFormat, SplitBy
+       
+        // $results = array();
+        // $query = db_select('xb_masterexch', 'e')            
+        //      ->condition('MasterExchActive', 1)
+        //      ->fields('e');
+        // $results = $query->execute()->fetchAll();
+
+
+        // return $results;
+
+        $exchange = array('- Select exchange -');
+            $conn = Database::getConnection();
+            $results = array();
+            $query = $conn->select('xb_masterexch', 'e')
+               // ->condition('user_id', -1)
+                ->condition('MasterExchActive', 1)
+                ->fields('e');
+            $results = $query->execute()->fetchAll();
+        
+            $exchanges = array();
+        
+            foreach ($results as $h) {
+                $exchanges[$h->MasterExchID] = $h->MasterExchName;
+            }
+          //  $uniqueExchanges = array_unique($exchanges);
+        
+            return $exchanges;
+
+
+    }

@@ -54,6 +54,15 @@ engdata.display_Pair_Connection_controller:
   requirements:
     _permission: 'access content'
 
+engdata.exchange_controller:
+  path: '/list/masterexchange'
+  defaults:
+    _controller: '\Drupal\engdata\Controller\MasterExchangeController::display'
+    _title: 'Master Exchanges'
+  requirements:
+    _permission: 'access content'
+
+
   #   engdata.engdata_pairconn_form:
   # path: '/engdata/pairconn/form'
   # defaults:
@@ -96,9 +105,18 @@ engdata.default_form:
     _access: 'TRUE'
     
 engdata.masterexchange_form:
-  path: '/engdata/masterexchange'
+  path: '/masterexchange'
   defaults:
     _form: '\Drupal\engdata\Form\masterExchangeForm'
     _title: 'Manage Exchanges'
   requirements:
     _access: 'TRUE'
+
+    
+engdata.deleteExchange_form:
+  path: '/masterexchange/delete/{cid}'
+  defaults:
+    _form: '\Drupal\engdata\Form\DeleteExchange'
+    _title: 'Delete Exchange'
+  requirements:
+    _access: 'TRUE' 
