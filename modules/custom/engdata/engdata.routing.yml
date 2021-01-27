@@ -1,4 +1,3 @@
-
 # engdata.engdata_controller_display:
 #   path: '/engdata'
 #   defaults:
@@ -6,7 +5,6 @@
 #     _title: 'display'
 #   requirements:
 #     _permission: 'access content'
-
 
 # engdata.engdata_controller_display:
 #    path: '/engdata/form'
@@ -16,52 +14,86 @@
 #   requirements:
 #     _permission: 'access content'
 
-engdata.engdata_form:
-  path: '/engdata/form'
-  defaults:
-    _form: '\Drupal\engdata\Form\engdataForm'
-    _title: 'Engine config'
-  requirements:
-    _access: 'TRUE'
-  
-
 engdata.display_table_controller_display:
-  path: '/engdata'
+  path: "/engdata"
   defaults:
     _controller: '\Drupal\engdata\Controller\DisplayTableController::display'
-    _title: 'Engine config'
+    _title: "Engine config"
   requirements:
-    _permission: 'access content'
+    _role: "administrator"
 
-
-
-engdata.delete_form:
-  path: '/engdata/delete/{cid}'
-  defaults:
-    _form: '\Drupal\engdata\Form\DeleteForm'
-    _title: 'Delete Form'
-  requirements:
-    _access: 'TRUE'
-  
-
-
-    
 engdata.display_Pair_Connection_controller:
-  path: '/engdata/pairconn'
+  path: "/exchangepairs"
   defaults:
     _controller: '\Drupal\engdata\Controller\PairListController::display'
-    _title: 'Pair connection'
+    _title: "Exchange pairs"
   requirements:
-    _permission: 'access content'
+    _role: "administrator"
 
 engdata.exchange_controller:
-  path: '/list/masterexchange'
+  path: "/list/masterexchange"
   defaults:
     _controller: '\Drupal\engdata\Controller\MasterExchangeController::display'
-    _title: 'Master Exchanges'
+    _title: "Master exchanges"
   requirements:
-    _permission: 'access content'
+    _role: "administrator"
 
+engdata.user_connection_controller:
+  path: "/list/exconn"
+  defaults:
+    _controller: '\Drupal\engdata\Controller\UserConnectionController::display'
+    _title: "Exchange connections"
+  requirements:
+    _permission: "access content"
+
+engdata.engdata_form:
+  path: "/engdata/form"
+  defaults:
+    _form: '\Drupal\engdata\Form\engdataForm'
+    _title: "Engine config"
+  requirements:
+    _role: "administrator"
+
+engdata.delete_form:
+  path: "/engdata/delete/{cid}"
+  defaults:
+    _form: '\Drupal\engdata\Form\DeleteForm'
+    _title: "Delete engine config"
+  requirements:
+    _role: "administrator"
+
+engdata.masterexchange_form:
+  path: "/masterexchange"
+  defaults:
+    _form: '\Drupal\engdata\Form\masterExchangeForm'
+    _title: "Manage exchanges"
+  requirements:
+    _role: "administrator"
+
+engdata.deleteExchange_form:
+  path: "/masterexchange/delete/{cid}"
+  defaults:
+    _form: '\Drupal\engdata\Form\DeleteExchange'
+    _title: "Delete master exchange"
+  requirements:
+    _role: "administrator"
+
+
+engdata.userexapiconn_form:
+  path: "/conn/userexconn"
+  defaults:
+    _form: '\Drupal\engdata\Form\userexapiconn'
+    _title: "Manage exchange connection"
+  requirements:
+    _role: "administrator"
+
+engdata.deleteuserexConn_form:
+  path: "/conn/userexconn/delete/{cid}"
+  defaults:
+    _form: '\Drupal\engdata\Form\DeleteUserExConn'
+    _title: "Delete User exchange API connection"
+  requirements:
+    _role: "administrator"
 
   #   engdata.engdata_pairconn_form:
   # path: '/engdata/pairconn/form'
@@ -70,53 +102,42 @@ engdata.exchange_controller:
   #   _title: 'pairconnform'
   # requirements:
   #   _access: 'TRUE'
-engdata.pairconn_form:
-  path: '/engdata/pairconn/form'
-  defaults:
-    _form: '\Drupal\engdata\Form\pairconnform'
-    _title: 'Exchange Pair config'
-  requirements:
-    _access: 'TRUE'
+# engdata.pairconn_form:
+#   path: "/exchangepaircon"
+#   defaults:
+#     _form: '\Drupal\engdata\Form\pairconnform'
+#     _title: "Exchange pair config"
+#   requirements:
+#     _access: "TRUE"
 
-engdata.connectionsform_form:
-  path: '/engdata/connections/form'
-  defaults:
-    _form: '\Drupal\engdata\Form\connectionsform'
-    _title: 'User pair connections config'
-  requirements:
-    _access: 'TRUE'
+# engdata.connectionsform_form:
+#   path: "/engdata/connections/form"
+#   defaults:
+#     _form: '\Drupal\engdata\Form\connectionsform'
+#     _title: "User pair connections config"
+#   requirements:
+#     _access: "TRUE"
 
- 
-engdata.exchangeapiform_form:
-  path: '/engdata/exchangeapi/form'
-  defaults:
-    _form: '\Drupal\engdata\Form\exchangeapiform'
-    _title: 'User exchange API config'
-  requirements:
-    _access: 'TRUE'
+# engdata.exchangeapiform_form:
+#   path: '/engdata/exchangeapi/form'
+#   defaults:
+#     _form: '\Drupal\engdata\Form\exchangeapiform'
+#     _title: 'User exchange API config'
+#   requirements:
+#     _access: 'TRUE'
 
-     
-engdata.default_form:
-  path: '/engdata/ajaxexample/form'
-  defaults:
-    _form: '\Drupal\engdata\Form\ajaxexample'
-    _title: 'ajax example'
-  requirements:
-    _access: 'TRUE'
-    
-engdata.masterexchange_form:
-  path: '/masterexchange'
-  defaults:
-    _form: '\Drupal\engdata\Form\masterExchangeForm'
-    _title: 'Manage Exchanges'
-  requirements:
-    _access: 'TRUE'
+# engdata.default_form:
+#   path: "/engdata/ajaxexample/form"
+#   defaults:
+#     _form: '\Drupal\engdata\Form\ajaxexample'
+#     _title: "ajax example"
+#   requirements:
+#     _access: "TRUE"
 
-    
-engdata.deleteExchange_form:
-  path: '/masterexchange/delete/{cid}'
-  defaults:
-    _form: '\Drupal\engdata\Form\DeleteExchange'
-    _title: 'Delete Exchange'
-  requirements:
-    _access: 'TRUE' 
+# engdata.deleteExPairConn_form:
+#   path: "/exchangepaircon/delete/{cid}"
+#   defaults:
+#     _form: '\Drupal\engdata\Form\DeleteExPairConn'
+#     _title: "Delete exchange pair connection"
+#   requirements:
+#     _access: "TRUE"

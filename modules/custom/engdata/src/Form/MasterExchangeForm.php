@@ -55,6 +55,12 @@ class masterExchangeForm extends FormBase
             '#title' => t('Exchange Name:'),
             '#required' => true,
             '#default_value' => (isset($record['MasterExchName']) && $_GET['num']) ? $record['MasterExchName'] : '',
+           // '#attributes' => array('class' => array('col-xs-5')),
+            // '#prefix' =>  '<div class="col-xs-5">',
+            // '#suffix' => '</div>',
+            // '#label_classes' => [
+            //     'col-lg-2'
+            // ]
         );
         // $default = 'Yes';
 
@@ -67,12 +73,16 @@ class masterExchangeForm extends FormBase
                 '0' => t('No'),
                 //   '#default_value' => (isset($record['MasterExchActive']) && $_GET['num']) ? $record['MasterExchActive']:'',
             ),
+            // '#prefix' =>  '<div class="col-xs-5">',
+            // '#suffix' => '</div>',
         );
         $form['ApiEndpoint'] = array(
           '#type' => 'textfield',
           '#title' => t('API endpoint:'),
           '#required' => true,
           '#default_value' => (isset($record['ApiEndpoint']) && $_GET['num']) ? $record['ApiEndpoint'] : '',
+        //   '#prefix' =>  '<div class="col-lg-10">',
+        //   '#suffix' => '</div>',
       );
         $form['PairFormat'] = array(
           '#type' => 'select',
@@ -83,6 +93,8 @@ class masterExchangeForm extends FormBase
               'Base_Quote' => t('Base_Quote'),
               //   '#default_value' => (isset($record['PairFormat']) && $_GET['num']) ? $record['PairFormat']:'',
           ),
+        //   '#prefix' =>  '<div class="col-xs-5">',
+        //   '#suffix' => '</div>',
       );
       
       $form['SplitBy'] = array(
@@ -102,12 +114,16 @@ class masterExchangeForm extends FormBase
             '|' => t('|'),
             //   '#default_value' => (isset($record['SplitBy']) && $_GET['num']) ? $record['SplitBy']:'',
         ),
+        // '#prefix' =>  '<div class="col-xs-5">',
+        // '#suffix' => '</div>',
     );
 
         $form['submit'] = [
             '#type' => 'submit',
             '#value' => 'save',
             //'#value' => t('Submit'),
+            // '#prefix' => '<div class="col-xs-5">',
+            // '#suffix' => '<span class="suffix">Count</span></div>',
         ];
 
         return $form;

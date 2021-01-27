@@ -6,11 +6,11 @@ use Drupal\Core\Controller\ControllerBase;
 use Drupal\Core\Url;
 
 /**
- * Class PairListController.
+ * Class UserConnectionController.
  *
  * @package Drupal\engdata\Controller
  */
-class PairListController extends ControllerBase
+class UserConnectionController extends ControllerBase
 {
 
     public function getContent()
@@ -20,8 +20,8 @@ class PairListController extends ControllerBase
         // @todo: Set up links to create nodes and point to devel module.
         $build = [
             'description' => [
-                '#theme' => 'engdata_description',
-                '#description' => 'Manage exchange pair',
+              //  '#theme' => 'engdata_description',
+                '#description' => 'Manage user exchange connections',
                 '#attributes' => [],
             ],
         ];
@@ -40,68 +40,52 @@ class PairListController extends ControllerBase
         '#type' => 'markup',
         '#markup' => $this->t('Implement method: display with parameter(s): $name'),
         ];*/
-        //ID, ExchID, Pair, Currency, Category, UserID, Active
+        //ConnID, MasterExchID, UserConnName, Exch_API_Public, Exch_API_PublicVersion, Exch_API_Private, Exch_API_PrivateVersion, UserID, ExchActive, Timestamp
         //create table header
         $header_table = array(
             'ID' => t('Id'),
-            'ExchID' => t('ExchID'),
+            'UserConnName' => t('Connection'),
             'Exchange' => t('Exchange'),
-            'Pair' => t('Pair'),
-            'xb_pair' => t('xb_pair'),
-            'ex_pair' => t('ex_pair'),
-            'Currency' => t('Currency'),
-            'Category' => t('Category'),
-            'UserID' => t('UserID'),
-            'Active' => t('Active'),
+            'ExchActive' => t('Active'),
             'Delete' => t('Delete'),
             'Edit' => t('Edit'),
         );
 
-        // $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
-        // $uid = $user->get('uid')->value;
+        $user = \Drupal\user\Entity\User::load(\Drupal::currentUser()->id());
+        $uid = $user->get('uid')->value;
         //select records from table
         // $query = \Drupal::database()->select('xb_exchcurrencies', 'e');
         // $query->condition('UserID', 0);
         // $query->fields('e');
         // $results = $query->execute()->fetchAll();
 
-        $query = db_select('xb_exchcurrencies', 'p');
-        $query->join('xb_masterexch', 'm', 'm.MasterExchID = p.ExchID');
+        $query = db_select('xb_exchconnection', 'p');
+        $query->join('xb_masterexch', 'm', 'm.MasterExchID = p.MasterExchID');
         $result = $query
-            ->fields('p', array('ID', 'ExchID', 'Pair', 'Currency', 'Category', 'UserID', 'Active'))
-            ->fields('m', array('MasterExchName','SplitBy'))
+            ->fields('p', array('ConnID', 'MasterExchID', 'UserConnName', 'ExchActive'))
+            ->fields('m', array('MasterExchName'))
+            ->condition('p.UserID', $uid)
             ->orderBy("m.MasterExchName")
             ->execute();
         $results = $query->execute()->fetchAll();
 
         $rows = array();
+        $i=1;
         foreach ($results as $data) {
-             $delete = Url::fromUserInput('/exchangepaircon/delete/'.$data->ID);
-            $edit = Url::fromUserInput('/exchangepaircon?num=' . $data->ID);
+             $delete = Url::fromUserInput('/conn/userexconn/delete/'.$data->ConnID);
+            $edit = Url::fromUserInput('/conn/userexconn?num=' . $data->ConnID);
 
             //print the data from table
             $rows[] = array(
-                // 'ID' => $data->ID,
-                // 'User ID' => ($data->user_id == 0 ? 'Admin' : $data->UserID),
-                // 'Exchange' => $data->MasterExchName,
-                // 'Pair' => $data->pair,
-                // 'Enabled' => ($data->enabled == '1' ? 'Yes' : 'No'),
-                // 'Last Update' => $data->last_updated,
-                //$string =; 
-
-                'ID' => $data->ID,
-                'ExchID' => $data->ExchID,
+               
+                'ID' => $i,
                 'Exchange' => $data->MasterExchName,
-                'Pair' => $data->Pair,
-                'xb_pair' => preg_replace('/[^A-Za-z0-9\-]/', '_', $data->Pair),
-                'ex_pair' => preg_replace('/[^A-Za-z0-9\-]/', $data->SplitBy, $data->Pair),
-                'Currency' => $data->Currency,
-                'Category' => $data->Category,
-                'UserID' =>  ($data->UserID == 0 ? 'Admin' : $data->UserID),
-                'Active' => $data->Active,
+                'UserConnName' => $data->UserConnName,
+                'Active' => $data->ExchActive,
                 \Drupal::l('Delete', $delete),
                 \Drupal::l('Edit', $edit),
             );
+            $i++;
 
         }
         global $base_url;
@@ -109,8 +93,7 @@ class PairListController extends ControllerBase
         //display data in site
         $form['table'] = [
             '#type' => 'table',
-            '#prefix' => '<h4>Manage exchange pairs</h4> </hr>', 
-            //<a href="'.$base_url .'/exchangepaircon" class="btn btn-primary">Add new pair</a></hr><br><br>',
+            '#prefix' => '<h4>Manage connections</h4> </hr> <a href="'.$base_url .'/conn/userexconn" class="btn btn-primary">Add new connection</a></hr><br><br>',
             '#header' => $header_table,
             '#rows' => $rows,
             '#empty' => t('No data found'),

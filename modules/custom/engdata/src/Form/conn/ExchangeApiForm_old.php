@@ -12,7 +12,7 @@ use Drupal\encrypt\Entity\EncryptionProfile;
  *
  * @package Drupal\engdata\Form
  */
-class exchangeapiform extends FormBase
+class exchangeapiform_old extends FormBase
 {
 
     /**
@@ -78,7 +78,7 @@ class exchangeapiform extends FormBase
             '#type' => 'select',
             '#empty_value' => '',
             '#required' => true,
-            '#empty_option' => '- Select a value -',
+            '#empty_option' => '- Select -',
             '#default_value' => (isset($values['exchange']) ? $values['exchange'] : ''),
             '#options' => _get_all_exchanges(),
             '#ajax' => [
@@ -146,7 +146,7 @@ class exchangeapiform extends FormBase
                 '#empty_value' => '',
                 '#title' => t('Ticker rate:'),
                 //'#required' => true,
-                '#empty_option' => '- Select a value -',
+                '#empty_option' => '- Select -',
                 '#options' => array(
                     'Highest bid' => t('Highest bid'),
                     'Lowest ask' => t('Lowest ask')),
@@ -426,23 +426,11 @@ function _load_data($exchange)
      */
  function _get_all_exchanges()
     {
-        //MasterExchID, MasterExchName, MasterExchActive, Timestamp, ApiEndpoint, PairFormat, SplitBy
-       
-        // $results = array();
-        // $query = db_select('xb_masterexch', 'e')            
-        //      ->condition('MasterExchActive', 1)
-        //      ->fields('e');
-        // $results = $query->execute()->fetchAll();
-
-
-        // return $results;
-
-        $exchange = array('- Select exchange -');
+            $exchange = array('- Select exchange -');
             $conn = Database::getConnection();
             $results = array();
             $query = $conn->select('xb_masterexch', 'e')
-               // ->condition('user_id', -1)
-                ->condition('MasterExchActive', 1)
+                      ->condition('MasterExchActive', 1)
                 ->fields('e');
             $results = $query->execute()->fetchAll();
         
